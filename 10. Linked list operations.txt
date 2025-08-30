@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a linked list node
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;  // global head pointer
+
+// Function to insert a node at the end
+void insert(int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = val;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+    printf("%d inserted into the list.\n", val);
+}
+
+// Function to delete a node by value
+void delete(int val) {
+    if (head == NULL) {
+        printf("List is empty. Cannot delete.\n");
+        return;
+    }
+
+    struct Node *temp = head, *prev = NULL;
+
+    // If head node holds the value
+    if (temp != NULL && temp->data == val) {
+        head = temp->next;
+        free(temp);
+        printf("%d deleted from the list.\n", val);
+        return;
+    }
+
+    // Search for the node
+    while (temp != NULL && temp->data != val) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // Value not found
+    if (temp == NULL) {
+        printf("%d not found in the list.\n", val);
+        return;
+    }
+
+    // Unlink node
+    prev->next = temp->next;
+    free(temp);
+    printf("%d deleted from the list.\n", val);
+}
+
+// Function to display the linked list
+void display() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    printf("Linked List: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+// Main program with menu
+int main() {
+    int choice, val;
+
+    while (1) {
+        printf("\n--- Linked List Operations ---\n");
+        printf("1. Insert\n2. Delete\n3. Display\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &val);
+                insert(val);
+                break;
+            case 2:
+                printf("Enter value to delete: ");
+                scanf("%d", &val);
+                delete(val);
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    }
+
+    return 0;
+}
