@@ -1,0 +1,70 @@
+#include <stdio.h>
+#define MAX 100
+
+int queue[MAX], front = -1, rear = -1;
+int visited[MAX];
+
+// Function to add element to queue
+void enqueue(int vertex) {
+    if (rear == MAX - 1) {
+        printf("Queue Overflow\n");
+        return;
+    }
+    if (front == -1)
+        front = 0;
+    queue[++rear] = vertex;
+}
+
+// Function to remove element from queue
+int dequeue() {
+    if (front == -1 || front > rear)
+        return -1;
+    return queue[front++];
+}
+
+// BFS Traversal
+void BFS(int graph[MAX][MAX], int vertices, int start) {
+    for (int i = 0; i < vertices; i++)
+        visited[i] = 0;  // mark all unvisited
+
+    enqueue(start);
+    visited[start] = 1;
+
+    printf("BFS Traversal starting from vertex %d: ", start);
+
+    while (front <= rear) {
+        int current = dequeue();
+        printf("%d ", current);
+
+        for (int i = 0; i < vertices; i++) {
+            if (graph[current][i] == 1 && !visited[i]) {
+                enqueue(i);
+                visited[i] = 1;
+            }
+        }
+    }
+    printf("\n");
+}
+
+// Main function
+int main() {
+    int vertices;
+    printf("Enter number of vertices: ");
+    scanf("%d", &vertices);
+
+    int graph[MAX][MAX];
+    printf("Enter adjacency matrix of the graph (%d x %d):\n", vertices, vertices);
+    for (int i = 0; i < vertices; i++) {
+        for (int j = 0; j < vertices; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    int start;
+    printf("Enter starting vertex (0 to %d): ", vertices - 1);
+    scanf("%d", &start);
+
+    BFS(graph, vertices, start);
+
+    return 0;
+}

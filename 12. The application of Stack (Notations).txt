@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <ctype.h>   // for isalnum()
+#include <string.h>
+
+#define MAX 100
+
+char stack[MAX];
+int top = -1;
+
+// Push operation
+void push(char c) {
+    if (top == MAX - 1) {
+        printf("Stack Overflow\n");
+    } else {
+        stack[++top] = c;
+    }
+}
+
+// Pop operation
+char pop() {
+    if (top == -1) {
+        return -1;  // Stack empty
+    } else {
+        return stack[top--];
+    }
+}
+
+// Function to define precedence of operators
+int precedence(char c) {
+    if (c == '^')
+        return 3;
+    else if (c == '*' || c == '/')
+        return 2;
+    else if (c == '+' || c == '-')
+        return 1;
+    else
+        return -1;
+}
+
+// Infix to Postfix conversion
+void infixToPostfix(char infix[]) {
+    char postfix[MAX];
+    int i, k = 0;
+    char ch;
+
+    for (i = 0; infix[i] != '\0'; i++) {
+        ch = infix[i];
+
+        // If character is operand, add to output
+        if (isalnum(ch)) {
+            postfix[k++] = ch;
+        }
+        // If character is '(', push to stack
+        else if (ch == '(') {
+            push(ch);
+        }
+        // If character is ')', pop until '('
+        else if (ch == ')') {
+            while (top != -1 && stack[top] != '(') {
+                postfix[k++] = pop();
+            }
+            pop(); // remove '('
+        }
+        // If operator
+        else {
+            while (top != -1 && precedence(stack[top]) >= precedence(ch)) {
+                postfix[k++] = pop();
+            }
+            push(ch);
+        }
+    }
+
+    // Pop remaining operators
+    while (top != -1) {
+        postfix[k++] = pop();
+    }
+
+    postfix[k] = '\0';
+    printf("Postfix Expression: %s\n", postfix);
+}
+
+int main() {
+    char infix[MAX];
+
+    printf("Enter an infix expression: ");
+    scanf("%s", infix);
+
+    infixToPostfix(infix);
+
+    return 0;
+}
