@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <limits.h>
+
+struct Edge {
+    int u, v, w;  // u = source, v = destination, w = weight
+};
+
+int main() {
+    int n, i, j;
+    int graph[20][20];
+    struct Edge edges[100];
+    int edgeCount = 0;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix (0 if no edge):\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    // Convert adjacency matrix to edge array
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {  // avoid duplicates (undirected graph)
+            if (graph[i][j] != 0) {
+                edges[edgeCount].u = i;
+                edges[edgeCount].v = j;
+                edges[edgeCount].w = graph[i][j];
+                edgeCount++;
+            }
+        }
+    }
+
+    // Find minimum edge
+    int minW = INT_MAX, minIndex = -1;
+    for (i = 0; i < edgeCount; i++) {
+        if (edges[i].w < minW) {
+            minW = edges[i].w;
+            minIndex = i;
+        }
+    }
+
+    printf("\nEdge list representation:\n");
+    for (i = 0; i < edgeCount; i++) {
+        printf("(%d -- %d) : %d\n", edges[i].u, edges[i].v, edges[i].w);
+    }
+
+    if (minIndex != -1) {
+        printf("\nMinimum edge is (%d -- %d) with weight %d\n",
+               edges[minIndex].u, edges[minIndex].v, edges[minIndex].w);
+    } else {
+        printf("\nNo edges in the graph.\n");
+    }
+
+    return 0;
+}

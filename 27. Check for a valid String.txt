@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+// Function to check if a string is a valid integer
+int isValidInteger(char *str) {
+    int i = 0;
+    if (str[0] == '-' || str[0] == '+') {
+        i = 1; // skip sign
+    }
+    if (str[i] == '\0') return 0; // string cannot be just "+" or "-"
+
+    for (; str[i] != '\0'; i++) {
+        if (!isdigit(str[i])) {
+            return 0; // invalid if any non-digit found
+        }
+    }
+    return 1; // valid integer string
+}
+
+// Reverse integer function
+int reverse(int x) {
+    long long rev = 0;
+    while (x != 0) {
+        int digit = x % 10;
+        rev = rev * 10 + digit;
+        if (rev > INT_MAX || rev < INT_MIN) {
+            return 0; // overflow
+        }
+        x /= 10;
+    }
+    return (int)rev;
+}
+
+int main() {
+    char str[50];
+    printf("Enter a number: ");
+    scanf("%s", str);
+
+    if (!isValidInteger(str)) {
+        printf("Invalid input! Not a valid integer string.\n");
+        return 0;
+    }
+
+    long long num = atoll(str); // convert to long long
+    if (num > INT_MAX || num < INT_MIN) {
+        printf("Invalid input! Out of 32-bit integer range.\n");
+        return 0;
+    }
+
+    int result = reverse((int)num);
+    printf("Reversed integer: %d\n", result);
+
+    return 0;
+}

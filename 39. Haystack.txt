@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char haystack[100], needle[50];
+    char *pos;
+
+    printf("Enter the main string (haystack): ");
+    scanf(" %[^\n]", haystack);   // read line with spaces
+
+    printf("Enter the substring to search (needle): ");
+    scanf(" %[^\n]", needle);
+
+    pos = strstr(haystack, needle);  // find substring
+
+    if (pos != NULL) {
+        printf("Substring found at position: %ld\n", pos - haystack);
+    } else {
+        printf("Substring not found.\n");
+    }
+
+    return 0;
+}

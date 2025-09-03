@@ -1,0 +1,77 @@
+#include <stdio.h>
+#define INF 9999
+#define MAX 100
+
+void dijkstra(int G[MAX][MAX], int n, int start) {
+    int cost[MAX][MAX], distance[MAX], pred[MAX];
+    int visited[MAX], count, mindistance, nextnode, i, j;
+
+    // Create cost matrix
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            if (G[i][j] == 0)
+                cost[i][j] = INF;
+            else
+                cost[i][j] = G[i][j];
+
+    // Initialize
+    for (i = 0; i < n; i++) {
+        distance[i] = cost[start][i];
+        pred[i] = start;
+        visited[i] = 0;
+    }
+
+    distance[start] = 0;
+    visited[start] = 1;
+    count = 1;
+
+    while (count < n - 1) {
+        mindistance = INF;
+        for (i = 0; i < n; i++)
+            if (distance[i] < mindistance && !visited[i]) {
+                mindistance = distance[i];
+                nextnode = i;
+            }
+
+        visited[nextnode] = 1;
+        for (i = 0; i < n; i++)
+            if (!visited[i])
+                if (mindistance + cost[nextnode][i] < distance[i]) {
+                    distance[i] = mindistance + cost[nextnode][i];
+                    pred[i] = nextnode;
+                }
+        count++;
+    }
+
+    // Print shortest distance
+    for (i = 0; i < n; i++)
+        if (i != start) {
+            printf("\nDistance from %d to %d = %d", start, i, distance[i]);
+            printf("\nPath = %d", i);
+            j = i;
+            do {
+                j = pred[j];
+                printf(" <- %d", j);
+            } while (j != start);
+            printf("\n");
+        }
+}
+
+int main() {
+    int G[MAX][MAX], i, j, n, u;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix of the graph:\n");
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            scanf("%d", &G[i][j]);
+
+    printf("Enter the starting node: ");
+    scanf("%d", &u);
+
+    dijkstra(G, n, u);
+
+    return 0;
+}
